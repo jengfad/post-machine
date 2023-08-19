@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import UrlEditor from "../panels/url/urlEditor";
 import axios from "axios";
-import { convertKeyValueToObject, getJsonData } from "../../utils/helpers";
+import { convertKeyValueToObject, createAxiosRequest, getJsonData, getRequestBody } from "../../utils/helpers";
 import RequestTabGroup from "../tabGroups/requestTabGroup";
 import RequestMode from "../layout/requestMode";
 import InstancesWrapper from "../layout/instancesWrapper";
@@ -40,17 +40,9 @@ const RequestWorkspace = observer((props: IProps) => {
         const requests = [];
 
         for (let i = 0; i < instances; i++) {
-            const requestBody = body.toString().replace(RANDOM_VALUE_TEXT, uuidv4());
-            const data = getJsonData(requestBody);
-            
-            const req = {
-                url: url,
-                method: reqMethod,
-                params: convertKeyValueToObject(queryParams),
-                headers: convertKeyValueToObject(headers),
-                data,
-            };
-            const task = axios(req).catch(error => {
+            const requestBody = getRequestBody(body);
+            const axiosRequest = createAxiosRequest(requestBody, reqMethod, url, headers, queryParams);
+            const task = axios(axiosRequest).catch(error => {
                 return error;
             });
             requests.push(task);
@@ -73,16 +65,10 @@ const RequestWorkspace = observer((props: IProps) => {
         setLoading(true);
 
         e.preventDefault();
-        const requestBody = body.toString().replace(RANDOM_VALUE_TEXT, uuidv4());
-        const data = getJsonData(requestBody);
+        const requestBody = getRequestBody(body);
+        const axiosRequest = createAxiosRequest(requestBody, reqMethod, url, headers, queryParams);
         try {
-            const response = await axios({
-                url: url,
-                method: reqMethod,
-                params: convertKeyValueToObject(queryParams),
-                headers: convertKeyValueToObject(headers),
-                data,
-            });
+            const response = await axios(axiosRequest);
             setSingleResponse(response);
         } catch (e) {
             console.log(e);

@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from "axios";
+import { nanoid } from "nanoid";
 import prettyBytes from "pretty-bytes";
 
 const convertKeyValueToObject = (keyPairs) => {
@@ -23,12 +25,36 @@ const getJsonData = (jsonString: string) => {
     }
 }
 
-const convertToCSV = (arr) => {
-    const array = [Object.keys(arr[0])].concat(arr)
+const getRequestBody = (body: any) => {
+    const RANDOM_VALUE_TEXT = '<random_value>';
+    const jsonString = body.toString().replace(RANDOM_VALUE_TEXT, nanoid(12));
 
-    return array.map(it => {
-        return Object.values(it).toString()
-    }).join('\n')
+    let data
+    try {
+        data = JSON.parse(jsonString);
+        return data;
+    } catch (e) {
+        alert('Something is wrong with the JSON data.');
+    }
+}
+
+const createAxiosRequest = (data: any, reqMethod: string, url: string, headers: any, queryParams: any) => {
+    const request = {
+        url: url,
+        method: reqMethod,
+        params: convertKeyValueToObject(queryParams),
+        headers: convertKeyValueToObject(headers)
+    } as AxiosRequestConfig;
+
+    if (requestNeedsBody(reqMethod)) {
+        request.data = data
+    };
+
+    return request;
+}
+
+const requestNeedsBody = (reqMethod: string) => {
+    return reqMethod === 'PUT' || reqMethod === 'PATCH' || reqMethod === 'POST';
 }
 
 const getMeta = (response: any) => {
@@ -66,5 +92,5 @@ const getMeta = (response: any) => {
     }
 }
 
-export { convertKeyValueToObject, getJsonData, convertToCSV, getMeta };
+export { convertKeyValueToObject, getJsonData, requestNeedsBody, getMeta, getRequestBody, createAxiosRequest };
   

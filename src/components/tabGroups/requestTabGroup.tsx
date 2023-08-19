@@ -40,20 +40,6 @@ const RequestTabGroup = observer((props: IProps) => {
             setPanelValue: setBody,
         },
     ];
-
-    // useEffect(() => {
-    //     if (reqMethod === 'PUT' || reqMethod === 'PATCH' || reqMethod === 'POST') {
-    //         tabs.push({
-    //             slug: 'body',
-    //             title: 'Body',
-    //             panel: JsonEditorPanel,
-    //             panelValue: body,
-    //             setPanelValue: setBody,
-    //             isEditable: true
-    //         });
-    //     }
-    //     setRequestTabs(tabs);
-    // }, [reqMethod]);
     
     return (
         <Tabs forceRenderTabPanel selectedTabClassName="border-b-2 text-blue-600">
