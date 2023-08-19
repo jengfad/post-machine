@@ -21,9 +21,10 @@ class AppStore {
     setBulkResponses = (responses: any[]) => {
         const formattedResponses = responses.map(response => {
             return {
-                data: JSON.stringify(response.data),
                 status: response.status,
-                requestBody: response.config.data
+                statusText: response.status.toString().startsWith('20') ? 'SUCCESS' : 'FAILED',
+                responseBody: JSON.stringify(response.data),
+                requestBody: response.config.data,
             }
         });
         this.bulkResponses = formattedResponses;

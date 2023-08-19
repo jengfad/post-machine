@@ -14,6 +14,8 @@ interface IProps {
     setLoading: any; 
 }
 
+const RANDOM_VALUE_TEXT = '<random_value>';
+
 const keyPairInitState = [
     {
         id: uuidv4(),
@@ -24,7 +26,7 @@ const keyPairInitState = [
 
 const RequestWorkspace = observer((props: IProps) => {
     const context = useContext(AppContext); 
-    const { mode, url, setUrl, reqMethod, setReqMethod, instances, bulkResponses, setBulkResponses, setSingleResponse } = context;
+    const { mode, url, setUrl, reqMethod, setReqMethod, instances, setBulkResponses, setSingleResponse } = context;
     
     const { setLoading } = props;
 
@@ -35,11 +37,12 @@ const RequestWorkspace = observer((props: IProps) => {
     const bulkRequest = async (e) => {
         setLoading(true);
         e.preventDefault();
-        const requestBody = body.toString();
-        const data = getJsonData(requestBody);
         const requests = [];
 
         for (let i = 0; i < instances; i++) {
+            const requestBody = body.toString().replace(RANDOM_VALUE_TEXT, uuidv4());
+            const data = getJsonData(requestBody);
+            
             const req = {
                 url: url,
                 method: reqMethod,
@@ -55,7 +58,6 @@ const RequestWorkspace = observer((props: IProps) => {
 
         const responses = await Promise.all(requests);
         setBulkResponses(responses);
-        console.log('responses', responses);
         setLoading(false);
     }
 
@@ -71,7 +73,7 @@ const RequestWorkspace = observer((props: IProps) => {
         setLoading(true);
 
         e.preventDefault();
-        const requestBody = body.toString();
+        const requestBody = body.toString().replace(RANDOM_VALUE_TEXT, uuidv4());
         const data = getJsonData(requestBody);
         try {
             const response = await axios({
