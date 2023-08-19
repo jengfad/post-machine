@@ -11,6 +11,7 @@ const App = observer(() => {
     <>
       <Layout>
         <RequestWorkspace setLoading={setLoading} />
+        <hr className='my-3 mt-[30px] border-black-50 h-[3px]' />
         <ResponseWorkspace loading={loading} />
       </Layout>
     </>

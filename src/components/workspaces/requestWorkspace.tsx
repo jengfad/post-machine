@@ -94,7 +94,8 @@ const RequestWorkspace = observer((props: IProps) => {
     
     return (
         <>
-            <div className="flex pt-2 pb-[40px]">
+            <span className='text-2xl font-medium'>Request</span>
+            <div className="flex py-[20px]">
                 <RequestMode></RequestMode>
                 {mode === BulkRequest && <div className="pl-[30px]"><InstancesWrapper /></div>}
             </div>

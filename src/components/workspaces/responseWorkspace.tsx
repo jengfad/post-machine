@@ -54,13 +54,13 @@ const ResponseWorkspace = observer((props: IProps) => {
 
     return (
         <div className='my-4'>
-        <span className='text-2xl font-medium'>Response</span>
-        {renderedSingleResponseMeta(meta)}
-        <ResponseTabGroup
-            mode={mode}
-            response={response}
-            loading={loading}
-        />
+            <span className='text-2xl font-medium'>Response</span>
+            {renderedSingleResponseMeta(meta)}
+            <ResponseTabGroup
+                mode={mode}
+                response={response}
+                loading={loading}
+            />
         </div>
     );
 });
