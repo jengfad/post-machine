@@ -1,6 +1,15 @@
 import { makeAutoObservable } from "mobx";
 import { createContext } from "react";
 import { BulkRequest } from "../constants/requestModes";
+import { nanoid } from "nanoid";
+
+const keyPairInitState = [
+    {
+        id: nanoid(20),
+        keyItem: '',
+        valueItem: '',
+    },
+]
 
 class AppStore {
     constructor() {
@@ -13,6 +22,26 @@ class AppStore {
     reqMethod = 'GET';
     bulkResponses = [];
     singleResponse: any;
+    loading = false;
+    queryParams: any = keyPairInitState;
+    headers: any = keyPairInitState;
+    body: any = '{\n\t\n}';
+
+    setQueryParams = (queryParams: any) => {
+        this.queryParams = queryParams;
+    }
+
+    setHeaders = (headers: any) => {
+        this.headers = headers;
+    }
+
+    setBody = (body: any) => {
+        this.body = body;
+    }
+
+    setLoading = (val: boolean) => {
+        this.loading = val;
+    }
 
     setSingleResponse = (response: any) => {
         this.singleResponse = response;

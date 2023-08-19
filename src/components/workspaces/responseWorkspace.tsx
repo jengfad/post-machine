@@ -31,7 +31,7 @@ const ResponseWorkspace = observer((props: IProps) => {
             setResponse(bulkResponses);
             assignMeta(null);
         }
-    }, [singleResponse, mode, loading]);
+    }, [singleResponse, bulkResponses]);
 
     const assignMeta = (response: any) => {
         if (!response) return setMeta(undefined);

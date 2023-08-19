@@ -1,9 +1,8 @@
 import { observer } from "mobx-react";
-import React, { useContext, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import React, { useContext } from "react";
 import UrlEditor from "../panels/url/urlEditor";
 import axios from "axios";
-import { convertKeyValueToObject, createAxiosRequest, getJsonData, getRequestBody } from "../../utils/helpers";
+import { createAxiosRequest, getRequestBody } from "../../utils/helpers";
 import RequestTabGroup from "../tabGroups/requestTabGroup";
 import RequestMode from "../layout/requestMode";
 import InstancesWrapper from "../layout/instancesWrapper";
@@ -11,28 +10,18 @@ import { AppContext } from "../../stores/appStore";
 import { BulkRequest, SingleRequest } from "../../constants/requestModes";
 
 interface IProps {
-    setLoading: any; 
+    queryParams: any;
+    setQueryParams: any;
+    headers: any;
+    setHeaders: any;
+    body: any;
+    setBody: any;
 }
 
-const RANDOM_VALUE_TEXT = '<random_value>';
-
-const keyPairInitState = [
-    {
-        id: uuidv4(),
-        keyItem: '',
-        valueItem: '',
-    },
-];
-
 const RequestWorkspace = observer((props: IProps) => {
+    const { queryParams, setQueryParams, headers, setHeaders, body, setBody } = props;
     const context = useContext(AppContext); 
-    const { mode, url, setUrl, reqMethod, setReqMethod, instances, setBulkResponses, setSingleResponse } = context;
-    
-    const { setLoading } = props;
-
-    const [queryParams, setQueryParams] = useState(keyPairInitState);
-    const [headers, setHeaders] = useState(keyPairInitState);
-    const [body, setBody] = useState('{\n\t\n}');
+    const { mode, url, setUrl, reqMethod, setReqMethod, instances, setBulkResponses, setSingleResponse, setLoading } = context;
     
     const bulkRequest = async (e) => {
         setLoading(true);
