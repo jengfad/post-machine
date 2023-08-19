@@ -1,9 +1,10 @@
 import { observer } from "mobx-react";
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import KeyValuePanel from "../panels/keyValue/keyValuePanel";
 import JsonEditorPanel from "../panels/json/jsonEditorPanel";
 import './tab-group.css';
+import { AppContext } from "../../stores/appStore";
 
 interface IProps {
     queryParams: any;
@@ -16,14 +17,17 @@ interface IProps {
 
 const RequestTabGroup = observer((props: IProps) => {
     const { queryParams, setQueryParams, headers, setHeaders, body, setBody } = props;
-
-    const requestTabs = [
+    const context = useContext(AppContext); 
+    const { reqMethod } = context;
+    const [requestTabs, setRequestTabs] = useState([]);
+    const tabs = [
         {
             slug: 'query-params',
             title: 'Query Params',
             panel: KeyValuePanel,
             panelValue: queryParams,
             setPanelValue: setQueryParams,
+            isEditable: false
         },
         {
             slug: 'headers',
@@ -31,16 +35,23 @@ const RequestTabGroup = observer((props: IProps) => {
             panel: KeyValuePanel,
             panelValue: headers,
             setPanelValue: setHeaders,
-        },
-        {
-            slug: 'body',
-            title: 'Body',
-            panel: JsonEditorPanel,
-            panelValue: body,
-            setPanelValue: setBody,
-            isEditable: true,
-        },
+            isEditable: false
+        }
     ];
+
+    useEffect(() => {
+        if (reqMethod === 'PUT' || reqMethod === 'PATCH' || reqMethod === 'POST') {
+            tabs.push({
+                slug: 'body',
+                title: 'Body',
+                panel: JsonEditorPanel,
+                panelValue: body,
+                setPanelValue: setBody,
+                isEditable: true
+            });
+        }
+        setRequestTabs(tabs);
+    }, [reqMethod]);
     
     return (
         <Tabs forceRenderTabPanel selectedTabClassName="border-b-2 text-blue-600">

@@ -1,28 +1,6 @@
 import { observer } from 'mobx-react';
 import React from 'react';
-
-const requestMethods = [
-  {
-    slug: 'get',
-    method: 'GET',
-  },
-  {
-    slug: 'post',
-    method: 'POST',
-  },
-  {
-    slug: 'put',
-    method: 'PUT',
-  },
-  {
-    slug: 'patch',
-    method: 'PATCH',
-  },
-  {
-    slug: 'delete',
-    method: 'DELETE',
-  },
-];
+import { RequestMethods } from '../../../constants/requestMethods';
 
 interface IProps {
     url: any;
@@ -43,7 +21,7 @@ const UrlEditor = observer((props: IProps) => {
                 value={reqMethod}
                 onChange={(e) => setReqMethod(e.target.value)}
             >
-                {requestMethods.map((option) => (
+                {RequestMethods.map((option) => (
                     <option key={option.slug} value={option.method}>
                         {option.method}
                     </option>

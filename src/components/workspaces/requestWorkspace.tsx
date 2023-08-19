@@ -25,14 +25,10 @@ const keyPairInitState = [
 
 const RequestWorkspace = observer((props: IProps) => {
     const context = useContext(AppContext); 
-    const { mode } = context;
+    const { mode, url, setUrl, reqMethod, setReqMethod } = context;
     
     const { setResponse, setLoading } = props;
 
-    const [url, setUrl] = useState(
-        'https://jsonplaceholder.typicode.com/todos/1'
-    );
-    const [reqMethod, setReqMethod] = useState('GET');
     const [queryParams, setQueryParams] = useState(keyPairInitState);
     const [headers, setHeaders] = useState(keyPairInitState);
     const [body, setBody] = useState('{\n\t\n}');
@@ -56,11 +52,11 @@ const RequestWorkspace = observer((props: IProps) => {
 
         try {
             const response = await axios({
-            url: url,
-            method: reqMethod,
-            params: convertKeyValueToObject(queryParams),
-            headers: convertKeyValueToObject(headers),
-            data,
+                url: url,
+                method: reqMethod,
+                params: convertKeyValueToObject(queryParams),
+                headers: convertKeyValueToObject(headers),
+                data,
             });
 
             setResponse(response);

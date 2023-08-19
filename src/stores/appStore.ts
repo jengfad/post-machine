@@ -9,6 +9,12 @@ class AppStore {
 
     mode = SingleRequest;
     instances = 1;
+    url = 'https://jsonplaceholder.typicode.com/todos/1';
+    reqMethod = 'GET';
+
+    setReqMethod = (method: string) => {
+        this.reqMethod = method;
+    }
 
     setMode = (mode: string) => {
         this.mode = mode;
@@ -16,6 +22,10 @@ class AppStore {
 
     setInstances = (instances: number) => {
         this.instances = instances;
+    }
+
+    setUrl = (url: string) => {
+        this.url = url;
     }
 
 }
