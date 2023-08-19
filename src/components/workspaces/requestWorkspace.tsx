@@ -3,15 +3,14 @@ import React, { useContext, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import UrlEditor from "../panels/url/urlEditor";
 import axios from "axios";
-import { convertKeyValueToObject } from "../../utils/helpers";
+import { convertKeyValueToObject, getJsonData } from "../../utils/helpers";
 import RequestTabGroup from "../tabGroups/requestTabGroup";
 import RequestMode from "../layout/requestMode";
 import InstancesWrapper from "../layout/instancesWrapper";
 import { AppContext } from "../../stores/appStore";
-import { BulkRequest } from "../../constants/requestModes";
+import { BulkRequest, SingleRequest } from "../../constants/requestModes";
 
 interface IProps {
-    setResponse: any; 
     setLoading: any; 
 }
 
@@ -25,31 +24,55 @@ const keyPairInitState = [
 
 const RequestWorkspace = observer((props: IProps) => {
     const context = useContext(AppContext); 
-    const { mode, url, setUrl, reqMethod, setReqMethod } = context;
+    const { mode, url, setUrl, reqMethod, setReqMethod, instances, bulkResponses, setBulkResponses, setSingleResponse } = context;
     
-    const { setResponse, setLoading } = props;
+    const { setLoading } = props;
 
     const [queryParams, setQueryParams] = useState(keyPairInitState);
     const [headers, setHeaders] = useState(keyPairInitState);
     const [body, setBody] = useState('{\n\t\n}');
     
+    const bulkRequest = async (e) => {
+        setLoading(true);
+        e.preventDefault();
+        const requestBody = body.toString();
+        const data = getJsonData(requestBody);
+        const requests = [];
+
+        for (let i = 0; i < instances; i++) {
+            const req = {
+                url: url,
+                method: reqMethod,
+                params: convertKeyValueToObject(queryParams),
+                headers: convertKeyValueToObject(headers),
+                data,
+            };
+            const task = axios(req).catch(error => {
+                return error;
+            });
+            requests.push(task);
+        }
+
+        const responses = await Promise.all(requests);
+        setBulkResponses(responses);
+        console.log('responses', responses);
+        setLoading(false);
+    }
+
     const handleOnInputSend = async (e) => {
+        if (mode === SingleRequest) {
+            await singleRequest(e);
+        } else {
+            await bulkRequest(e);
+        }
+    }
+
+    const singleRequest = async (e) => {
         setLoading(true);
 
         e.preventDefault();
         const requestBody = body.toString();
-        console.log('http method', reqMethod);
-        console.log('headers', headers);
-        console.log('query params ', queryParams);
-        console.log('body ', requestBody);
-
-        let data;
-        try {
-            data = JSON.parse(requestBody);
-        } catch (e) {
-            alert('Something is wrong with the JSON data.');
-        }
-
+        const data = getJsonData(requestBody);
         try {
             const response = await axios({
                 url: url,
@@ -58,11 +81,10 @@ const RequestWorkspace = observer((props: IProps) => {
                 headers: convertKeyValueToObject(headers),
                 data,
             });
-
-            setResponse(response);
+            setSingleResponse(response);
         } catch (e) {
             console.log(e);
-            setResponse(e);
+            setSingleResponse(e);
         }
 
         setLoading(false);

@@ -6,17 +6,18 @@ import KeyValueEditor from './keyValueEditor';
 interface IProps {
     panelValue: any;
     setPanelValue: any;
+    group: any;
 }
 
 const KeyValuePanel = observer((props: IProps) => {
     const { panelValue, setPanelValue } = props;
     const onKeyPairAdd = () => {
-        setPanelValue((paneValue) => [
-            ...paneValue,
+        setPanelValue((panelValue) => [
+            ...panelValue,
             {
-            id: uuidv4(),
-            keyItem: '',
-            valueItem: '',
+                id: uuidv4(),
+                keyItem: '',
+                valueItem: '',
             },
         ]);
     };

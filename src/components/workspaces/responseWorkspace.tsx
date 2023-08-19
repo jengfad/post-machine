@@ -1,65 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { observer } from "mobx-react";
-import prettyBytes from 'pretty-bytes';
 import ResponseTabGroup from '../tabGroups/responseTabGroup';
+import { AppContext } from '../../stores/appStore';
+import { SingleRequest } from '../../constants/requestModes';
+import { getMeta } from '../../utils/helpers';
 
 interface IProps {
-    response: any; 
     loading: any;
 }
 
+interface IMeta {
+    time: string;
+    status: string;
+    size: string;
+}
+
 const ResponseWorkspace = observer((props: IProps) => {
-    const { response, loading } = props;
-    const [doc, setDoc] = useState('{}');
+    const { loading } = props;
+    const context = useContext(AppContext); 
+    const { singleResponse, bulkResponses, mode } = context;
+    const [meta, setMeta] = useState(undefined);
+    const [response, setResponse] = useState(undefined);
 
     useEffect(() => {
-        if (response === null) return;
-        const jsonResponse = JSON.stringify(response.data, null, 2);
-        setDoc(jsonResponse);
-    }, [response, loading]);
-
-    const hasResponse = !(response == null);
-
-    let time = '';
-    let status = '';
-    let size = '';
-
-    if (hasResponse) {
-        const hasCustomData = 'customData' in response;
-        const hasData = 'data' in response;
-        const hasHeaders = 'headers' in response;
-
-        status = hasResponse ? response.status : 0;
-
-        if (hasData && hasHeaders) {
-        size = prettyBytes(
-            (hasResponse ? JSON.stringify(response.data).length : 0) +
-            (hasResponse ? JSON.stringify(response.headers).length : 0)
-        );
+        if (mode === SingleRequest) {
+            if (!singleResponse) return;
+            setResponse(singleResponse.data);
+            assignMeta(singleResponse);
+        } else {
+            setResponse(bulkResponses);
+            assignMeta(null);
         }
+    }, [singleResponse, mode, loading]);
 
-        if (hasCustomData) {
-        time = response.customData.time;
-        }
+    const assignMeta = (response: any) => {
+        if (!response) return setMeta(undefined);
+
+        const meta = getMeta(response);
+        setMeta(meta);
     }
 
-    const RenderedResponseMeta = () => {
+    const renderedSingleResponseMeta = (meta: IMeta) => {
+        if (!meta) return <></>;
+        const { status, time, size } = meta;
         return (
-        <div className="flex mt-3">
-            <span className='w-28'>Status: {status}</span>
-            <span className='w-24'>Time: {time}</span>
-            <span className='w-24'>Size: {size}</span>
-        </div>
+            <div className="flex mt-3">
+                <span className='w-28'>Status: {status}</span>
+                <span className='w-24'>Time: {time}</span>
+                <span className='w-24'>Size: {size}</span>
+            </div>
         );
     };
 
     return (
         <div className='my-4'>
         <span className='text-2xl font-medium'>Response</span>
-        {response ? ( <RenderedResponseMeta /> ) : null}
+        {renderedSingleResponseMeta(meta)}
         <ResponseTabGroup
-            doc={doc}
-            setDoc={setDoc}
+            mode={mode}
             response={response}
             loading={loading}
         />

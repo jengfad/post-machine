@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useContext, useState } from 'react';
 import { EditorView, keymap } from '@codemirror/view';
 import { EditorState, basicSetup } from '@codemirror/basic-setup';
 import { defaultTabBinding } from '@codemirror/commands';
 import { json } from '@codemirror/lang-json';
 import { observer } from 'mobx-react';
+import { AppContext } from '../../../stores/appStore';
 
 const basicExtensions = [
   basicSetup,
@@ -15,15 +16,22 @@ const basicExtensions = [
 interface IProps {
   panelValue: any;
   setPanelValue: any;
-  isEditable: boolean
+  group: any;
 }
 
 const JsonEditorPanel = observer((props: IProps) => {
-  const { panelValue, setPanelValue, isEditable } = props
+  const { panelValue, setPanelValue, group } = props;
+  const context = useContext(AppContext);
+  const { reqMethod } = context;
   const editorRef = useRef();
 
   useEffect(() => {
     if (editorRef.current === null) return;
+
+    let canEditJson = false;
+    if (group === 'request') {
+      canEditJson = reqMethod === 'PUT' || reqMethod === 'PATCH' || reqMethod === 'POST';
+    }
 
     const state = EditorState.create({
       doc: panelValue,
@@ -34,7 +42,7 @@ const JsonEditorPanel = observer((props: IProps) => {
             setPanelValue(view.state.doc);
           }
         }),
-        EditorView.editable.of(isEditable),
+        EditorView.editable.of(canEditJson),
       ],
     });
 
@@ -47,7 +55,7 @@ const JsonEditorPanel = observer((props: IProps) => {
       view.destroy();
     };
     // eslint-disable-next-line
-  }, [editorRef.current, panelValue]);
+  }, [editorRef.current, panelValue, reqMethod]);
 
   return <div ref={editorRef}></div>;
 });

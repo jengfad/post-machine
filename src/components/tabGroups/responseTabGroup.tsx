@@ -3,41 +3,36 @@ import React from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { ThreeDots } from 'react-loader-spinner';
 import JsonEditorPanel from "../panels/json/jsonEditorPanel";
-import ResponseHeaderPanel from "../panels/responseHeader/responseHeaderPanel";
+import { SingleRequest } from "../../constants/requestModes";
 
 interface IProps {
-    doc: any; 
-    setDoc: any; 
-    response: any; 
-    loading : any; 
+    response: any;
+    loading : any;
+    mode: string;
 }
 
 const ResponseTabGroup = observer((props: IProps) => {
-    const { doc, setDoc, response, loading } = props; 
+    const { response, loading, mode } = props; 
 
     const responseTabs = [
         {
             slug:'response-body',
             title:'Response Body'
-        },
-        {
-            slug: 'response-header',
-            title: 'Response Header'
         }
     ];
+
+    const doc = JSON.stringify(response, null, 2);
 
     const renderPanel = () => {
         return (
             <>
-                <TabPanel>
+                <TabPanel className="max-h-[500px] overflow-y-auto">
+                    {renderBulkSummary()}
                     <JsonEditorPanel
                         panelValue={doc}
-                        setPanelValue={setDoc}
-                        isEditable={false}
+                        setPanelValue={null}
+                        group={'response'}
                     />
-                </TabPanel>
-                <TabPanel >
-                    <ResponseHeaderPanel response={response} />
                 </TabPanel>
             </>
         );
@@ -51,6 +46,20 @@ const ResponseTabGroup = observer((props: IProps) => {
                 color="gray"
                 visible={true} 
             />
+        );
+    }
+
+    const renderBulkSummary = () => {
+        if (mode === SingleRequest || !response) return <></>
+
+        const successCount = response.filter(r => r.status.toString().startsWith('20')).length;
+        const failedCount = response.length - successCount;
+
+        return (
+            <div className="flex mb-3">
+                <div className="font-bold text-green-500">Success: {successCount}</div>
+                <div className="font-bold text-red-500 ml-3">Failed: {failedCount}</div>
+            </div>
         );
     }
 

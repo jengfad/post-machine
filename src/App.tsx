@@ -5,14 +5,13 @@ import RequestWorkspace from './components/workspaces/requestWorkspace';
 import ResponseWorkspace from './components/workspaces/responseWorkspace';
 
 const App = observer(() => {
-  const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
 
   return (
     <>
       <Layout>
-        <RequestWorkspace setResponse={setResponse} setLoading={setLoading} />
-        <ResponseWorkspace response={response} loading={loading} />
+        <RequestWorkspace setLoading={setLoading} />
+        <ResponseWorkspace loading={loading} />
       </Layout>
     </>
   );
