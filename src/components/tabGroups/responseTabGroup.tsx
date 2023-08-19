@@ -57,8 +57,8 @@ const ResponseTabGroup = observer((props: IProps) => {
 
         return (
             <div className="flex mb-3">
-                <div className="font-bold text-green-500">Success: {successCount}</div>
-                <div className="font-bold text-red-500 ml-3">Failed: {failedCount}</div>
+                <div className="text-green-600">Success: {successCount}</div>
+                <div className="text-red-600 ml-3">Failed: {failedCount}</div>
             </div>
         );
     }

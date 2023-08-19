@@ -21,6 +21,7 @@ class AppStore {
     setBulkResponses = (responses: any[]) => {
         const formattedResponses = responses.map(response => {
             return {
+                duration: `${response.customData?.time}ms`,  
                 status: response.status,
                 statusText: response.status.toString().startsWith('20') ? 'SUCCESS' : 'FAILED',
                 responseBody: JSON.stringify(response.data),
