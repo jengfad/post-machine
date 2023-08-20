@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import KeyValueEditor from './keyValueEditor';
+import { getRandomId } from '../../../utils/helpers';
 
 interface IProps {
     panelValue: any;
@@ -15,7 +15,7 @@ const KeyValuePanel = observer((props: IProps) => {
         setPanelValue((panelValue) => [
             ...panelValue,
             {
-                id: uuidv4(),
+                id: getRandomId(),
                 keyItem: '',
                 valueItem: '',
             },

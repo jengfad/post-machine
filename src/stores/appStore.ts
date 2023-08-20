@@ -1,11 +1,11 @@
 import { makeAutoObservable } from "mobx";
 import { createContext } from "react";
 import { BulkRequest } from "../constants/requestModes";
-import { nanoid } from "nanoid";
+import { getRandomId } from "../utils/helpers";
 
 const keyPairInitState = [
     {
-        id: nanoid(20),
+        id: getRandomId(),
         keyItem: '',
         valueItem: '',
     },

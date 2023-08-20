@@ -4,6 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { ThreeDots } from 'react-loader-spinner';
 import JsonEditorPanel from "../panels/json/jsonEditorPanel";
 import { SingleRequest } from "../../constants/requestModes";
+import * as XLSX from 'xlsx'
 
 interface IProps {
     response: any;
@@ -56,11 +57,24 @@ const ResponseTabGroup = observer((props: IProps) => {
         const failedCount = response.length - successCount;
 
         return (
-            <div className="flex mb-3">
+            <div className="flex mb-3 content-center">
                 <div className="text-green-600">Success: {successCount}</div>
                 <div className="text-red-600 ml-3">Failed: {failedCount}</div>
+                <div>
+                    <button
+                        className='ml-3 px-2 rounded-md text-white bg-blue-500 hover:bg-blue-600'
+                        type='button'
+                        onClick={() => downloadExcel()}>Download response as Excel file</button>
+                </div>
             </div>
         );
+    }
+
+    const downloadExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(response);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+        XLSX.writeFile(workbook, "PostMachineResponses.xlsx");
     }
 
     return (

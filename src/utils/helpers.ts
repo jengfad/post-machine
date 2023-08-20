@@ -27,7 +27,7 @@ const getJsonData = (jsonString: string) => {
 
 const getRequestBody = (body: any) => {
     const RANDOM_VALUE_TEXT = '<random_value>';
-    const jsonString = body.toString().replace(RANDOM_VALUE_TEXT, nanoid(12));
+    const jsonString = body.toString().replace(RANDOM_VALUE_TEXT, getRandomId());
 
     let data
     try {
@@ -55,6 +55,10 @@ const createAxiosRequest = (data: any, reqMethod: string, url: string, headers: 
 
 const requestNeedsBody = (reqMethod: string) => {
     return reqMethod === 'PUT' || reqMethod === 'PATCH' || reqMethod === 'POST';
+}
+
+const getRandomId = () => {
+    return nanoid(20);
 }
 
 const getMeta = (response: any) => {
@@ -92,5 +96,5 @@ const getMeta = (response: any) => {
     }
 }
 
-export { convertKeyValueToObject, getJsonData, requestNeedsBody, getMeta, getRequestBody, createAxiosRequest };
+export { getRandomId, convertKeyValueToObject, getJsonData, requestNeedsBody, getMeta, getRequestBody, createAxiosRequest };
   
