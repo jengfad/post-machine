@@ -7,12 +7,12 @@ import { AppContext } from './stores/appStore';
 
 const App = observer(() => {
   const context = useContext(AppContext); 
-  const { loading, body, setBody, queryParams, setQueryParams, headers, setHeaders } = context
+  const { loading } = context
 
   return (
     <>
       <Layout>
-        <RequestWorkspace body={body} setBody={setBody} queryParams={queryParams} setQueryParams={setQueryParams} headers={headers} setHeaders={setHeaders} />
+        <RequestWorkspace />
         <hr className='my-3 mt-[30px] border-black-50 h-[3px]' />
         <ResponseWorkspace loading={loading} />
       </Layout>

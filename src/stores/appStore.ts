@@ -3,14 +3,6 @@ import { createContext } from "react";
 import { BulkRequest } from "../constants/requestModes";
 import { getRandomId } from "../utils/helpers";
 
-const keyPairInitState = [
-    {
-        id: getRandomId(),
-        keyItem: '',
-        valueItem: '',
-    },
-]
-
 class AppStore {
     constructor() {
         makeAutoObservable(this);
@@ -23,21 +15,6 @@ class AppStore {
     bulkResponses = [];
     singleResponse: any;
     loading = false;
-    queryParams: any = keyPairInitState;
-    headers: any = keyPairInitState;
-    body: any = '{\n\t\n}';
-
-    setQueryParams = (queryParams: any) => {
-        this.queryParams = queryParams;
-    }
-
-    setHeaders = (headers: any) => {
-        this.headers = headers;
-    }
-
-    setBody = (body: any) => {
-        this.body = body;
-    }
 
     setLoading = (val: boolean) => {
         this.loading = val;
