@@ -15,16 +15,6 @@ const convertKeyValueToObject = (keyPairs) => {
     }, {});
 };
 
-const getJsonData = (jsonString: string) => {
-    let data;
-    try {
-        data = JSON.parse(jsonString);
-        return data;
-    } catch (e) {
-        alert('Something is wrong with the JSON data.');
-    }
-}
-
 const getRequestBody = (body: any) => {
     const RANDOM_VALUE_TEXT = '<random_value>';
     const jsonString = body.toString().replace(RANDOM_VALUE_TEXT, getRandomId());
@@ -35,6 +25,7 @@ const getRequestBody = (body: any) => {
         return data;
     } catch (e) {
         alert('Something is wrong with the JSON data.');
+        throw e;
     }
 }
 
@@ -96,5 +87,5 @@ const getMeta = (response: any) => {
     }
 }
 
-export { getRandomId, convertKeyValueToObject, getJsonData, requestNeedsBody, getMeta, getRequestBody, createAxiosRequest };
+export { getRandomId, convertKeyValueToObject, requestNeedsBody, getMeta, getRequestBody, createAxiosRequest };
   

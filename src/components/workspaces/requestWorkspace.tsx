@@ -31,7 +31,14 @@ const RequestWorkspace = observer(() => {
         const requests = [];
 
         for (let i = 0; i < instances; i++) {
-            const requestBody = getRequestBody(body);
+            let requestBody;
+
+            try {
+                requestBody = getRequestBody(body);
+            } catch(e) {
+                break;
+            }
+            
             const axiosRequest = createAxiosRequest(requestBody, reqMethod, url, headers, queryParams);
             const task = axios(axiosRequest).catch(error => {
                 return error;
